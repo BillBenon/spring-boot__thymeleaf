@@ -23,7 +23,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional
     public List<Employee> findAll() {
-        return employeeDAO.findAll();
+        return employeeDAO.findAllByOrderByLastNameAsc();
     }
 
     @Override
