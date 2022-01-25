@@ -1,6 +1,7 @@
 package com.billbenon.thymeleaf.thymeleafdemo.controller;
 
-import com.billbenon.thymeleaf.thymeleafdemo.model.Employee;
+import com.billbenon.thymeleaf.thymeleafdemo.entity.Employee;
+import com.billbenon.thymeleaf.thymeleafdemo.service.EmployeeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,25 +14,15 @@ import java.util.List;
 @Controller()
 @RequestMapping("/employees")
 public class EmployeeController {
+    public EmployeeService employeeService;
 
-    public List<Employee> theEmployees;
-    @PostConstruct
-    private void loadData() {
-        Employee emp1 = new Employee(1, "Bill", "Benon", "benon@gmail.com");
-        Employee emp2 = new Employee(1, "Bill", "Benon", "benon@gmail.com");
-        Employee emp3 = new Employee(1, "Bill", "Benon", "benon@gmail.com");
-        Employee emp4 = new Employee(1, "Bill", "Benon", "benon@gmail.com");
-
-        theEmployees = new ArrayList<>();
-
-        theEmployees.add(emp1);
-        theEmployees.add(emp2);
-        theEmployees.add(emp3);
-        theEmployees.add(emp4);
+    public EmployeeController(EmployeeService theEmployeeService) {
+        employeeService = theEmployeeService;
     }
 
     @GetMapping("/list")
     public String listEmployees(Model theModel) {
+        List<Employee> theEmployees = employeeService.findAll();
         theModel.addAttribute("employees", theEmployees);
         return "list-employees";
     }
