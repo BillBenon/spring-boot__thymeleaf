@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.billbenon.thymeleaf.thymeleafdemo.dao.EmployeeRepository;
 import com.billbenon.thymeleaf.thymeleafdemo.entity.Employee;
@@ -13,35 +12,57 @@ import com.billbenon.thymeleaf.thymeleafdemo.entity.Employee;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private EmployeeRepository employeeDAO;
+    private EmployeeRepository employeeRepository;
 
     @Autowired
-    public EmployeeServiceImpl(EmployeeRepository theEmployeeDAO) {
-        employeeDAO = theEmployeeDAO;
+    public EmployeeServiceImpl(EmployeeRepository theEmployeeRepository) {
+        employeeRepository = theEmployeeRepository;
     }
 
     @Override
-    @Transactional
     public List<Employee> findAll() {
-        return employeeDAO.findAllByOrderByLastNameAsc();
+        return employeeRepository.findAllByOrderByLastNameAsc();
     }
 
     @Override
-    @Transactional
-    public Optional<Employee> findById(int theId) {
-        return employeeDAO.findById(theId);
+    public Employee findById(int theId) {
+        Optional<Employee> result = employeeRepository.findById(theId);
+
+        Employee theEmployee = null;
+
+        if (result.isPresent()) {
+            theEmployee = result.get();
+        }
+        else {
+            throw new RuntimeException("Did not find employee id - " + theId);
+        }
+
+        return theEmployee;
     }
 
     @Override
-    @Transactional
     public void save(Employee theEmployee) {
-        employeeDAO.save(theEmployee);
+        employeeRepository.save(theEmployee);
     }
 
     @Override
-    @Transactional
     public void deleteById(int theId) {
-        employeeDAO.deleteById(theId);
+        employeeRepository.deleteById(theId);
+    }
+
+    @Override
+    public List<Employee> searchBy(String theName) {
+
+        List<Employee> results = null;
+
+        if (theName != null && (theName.trim().length() > 0)) {
+            results = employeeRepository.findByFirstNameContainsOrLastNameContainsAllIgnoreCase(theName, theName);
+        }
+        else {
+            results = findAll();
+        }
+
+        return results;
     }
 
 }

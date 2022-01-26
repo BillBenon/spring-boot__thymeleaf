@@ -7,7 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller()
 @RequestMapping("/employees")
@@ -34,7 +33,7 @@ public class EmployeeController {
 
     @GetMapping("/showFormForUpdate")
     public String showFormForUpdate(@RequestParam("employeeId") int theId, Model theModel) {
-        Optional<Employee> theEmployee = employeeService.findById(theId);
+        Employee theEmployee = employeeService.findById(theId);
         theModel.addAttribute("employee", theEmployee);
         return "employees/employee-form";
     }
@@ -49,5 +48,13 @@ public class EmployeeController {
     public String deleteEmployee(@RequestParam("employeeId") int theId) {
         employeeService.deleteById(theId);
         return "redirect:/employees/list";
+    }
+
+    @GetMapping("/search")
+    public String delete(@RequestParam("employeeName") String theName, Model theModel) {
+        List<Employee> theEmployees = employeeService.searchBy(theName);
+        theModel.addAttribute("employees", theEmployees);
+
+        return "employees/list-employees";
     }
 }
