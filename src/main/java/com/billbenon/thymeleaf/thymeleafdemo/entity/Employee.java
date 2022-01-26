@@ -28,7 +28,6 @@ public class Employee {
     private String email;
 
     // define constructors
-
     public Employee() {}
 
     public Employee(int id, String firstName, String lastName, String email) {
@@ -78,7 +77,7 @@ public class Employee {
         this.email = email;
     }
 
-    // define toString
+    // define tostring
 
     @Override
     public String toString() {
@@ -86,4 +85,3 @@ public class Employee {
     }
 
 }
-
